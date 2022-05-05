@@ -8,12 +8,11 @@
     let calculation = [];
     let currentNum = '';
     let operator = '';
-    let result = ''; // show '' as zero on calculator screen
+    let result = 0;
 
     const updateDisplay = string => {
         if (newDisplay) {
             $screen.value = string;
-            newDisplay = false;
         } else {
             $screen.value += string;
         }
@@ -22,36 +21,47 @@
     const pushNumber = event => {
         calculation.push(event.currentTarget.value);
         updateDisplay(event.currentTarget.value);
+        newDisplay = false;
     }
     const pushOperator = event => {
-        calculation.push(event.currentTarget.value);
         newDisplay = true;
+        if (event.currentTarget.value === 'clear') {
+            calculation = [];
+            updateDisplay('0');
+        } else {
+            calculation.push(event.currentTarget.value); 
+        }
     }
 
     const calculate = event => {
+        console.log(`start result ${result}`);
+        console.log(calculation);
+        if (calculation.length === 0) {
+            newDisplay = true;
+            updateDisplay(result.toString());
+            return;
+        };
         for (let entry of calculation) {
-            if (Number(entry)) {
+            if (Number.isInteger(Number(entry))) {
                 currentNum += entry;
                 console.log(`currentNum ${currentNum}`);
-            }
-            else {
-                if (entry === 'clear') {
-                    result = '';
-                    operator = '';
-                }
-                else {
-                    updateResult();
-                    operator = entry;
-                    newDisplay = true;
-                }
-                currentNum = '';
+            } else {
+                updateResult();
+                operator = entry;
+                newDisplay = true;
                 console.log(`operator ${entry}`);
-                console.log(`result ${result}`);
             }
+            console.log(`result ${result}`);
         }
         updateResult();
         console.log(`equals ${result}`);
-        $screen.value = result.toString();
+
+        // if (result.toString().length > 8) {
+        //     result = result.toFixed(6);
+        // }
+
+        newDisplay = true;
+        updateDisplay(result.toString());
         calculation = [];
     }
     
@@ -71,6 +81,7 @@
         else if (operator === '') {
             result = Number(currentNum);
         }
+        currentNum = '';
         // CHECK FOR NO OTHER INPUTS
     }
 
