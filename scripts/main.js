@@ -122,4 +122,5 @@
     $plusMinus.addEventListener('click',flipSign);
     $percent.addEventListener('click',pushPercent);
 
+    
 })();
