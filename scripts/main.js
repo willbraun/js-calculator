@@ -11,7 +11,7 @@
     let result = 0;
 
     const replaceDisplay = number => {
-        $screen.value = parseFloat(Number(number).toFixed(6)).toString();
+        $screen.value = parseFloat(Number(number).toPrecision(7)).toString();
     }
 
     const pushNumber = event => {
