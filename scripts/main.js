@@ -4,30 +4,27 @@
     const $equal = document.querySelector('.equal-sign');
     const $screen = document.querySelector('.calculator-screen');
 
-    let newDisplay = true;
+    let input = '';
     let calculation = [];
     let currentNum = '';
     let operator = '';
     let result = 0;
 
-    const updateDisplay = string => {
-        if (newDisplay) {
-            $screen.value = string;
-        } else {
-            $screen.value += string;
-        }
+    const replaceDisplay = string => {
+        $screen.value = string;
     }
 
     const pushNumber = event => {
         calculation.push(event.currentTarget.value);
-        updateDisplay(event.currentTarget.value);
-        newDisplay = false;
+        input += event.currentTarget.value;
+        replaceDisplay(input);
     }
+
     const pushOperator = event => {
-        newDisplay = true;
+        input = '';
         if (event.currentTarget.value === 'clear') {
             calculation = [];
-            updateDisplay('0');
+            replaceDisplay('0');
         } else {
             calculation.push(event.currentTarget.value); 
         }
@@ -37,8 +34,7 @@
         console.log(`start result ${result}`);
         console.log(calculation);
         if (calculation.length === 0) {
-            newDisplay = true;
-            updateDisplay(result.toString());
+            replaceDisplay(result.toString());
             return;
         };
         for (let entry of calculation) {
@@ -48,7 +44,6 @@
             } else {
                 updateResult();
                 operator = entry;
-                newDisplay = true;
                 console.log(`operator ${entry}`);
             }
             console.log(`result ${result}`);
@@ -56,12 +51,7 @@
         updateResult();
         console.log(`equals ${result}`);
 
-        // if (result.toString().length > 8) {
-        //     result = result.toFixed(6);
-        // }
-
-        newDisplay = true;
-        updateDisplay(result.toString());
+        replaceDisplay(result.toString());
         calculation = [];
     }
     
@@ -90,10 +80,6 @@
     $numbers.forEach(button => button.addEventListener('click',pushNumber));
     $operator.forEach(button => button.addEventListener('click',pushOperator));
     $equal.addEventListener('click',calculate);
-
-
-    
-
 
 
 })();
