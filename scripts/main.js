@@ -8,7 +8,6 @@
 
     let input = '';
     let calculation = [];
-    let currentNum = '';
     let operator = '';
     let result = 0;
 
@@ -23,28 +22,70 @@
     }
 
     const pushOperator = event => {
+        calcStringToNum();
         input = '';
         if (event.currentTarget.value === 'clear') {
-            calculation = calculation.filter(element => !Number.isInteger(Number(element)));
+            calculation.pop();
             replaceDisplay(0);
+            console.log('cleared');
+            console.log(calculation);
         } else {
-            if (calculation.some(element => Number.isInteger(Number(element)))) {
-                calculate();
-            }
+            calculation.length === 3 ? calculate() : null;
             calculation.push(event.currentTarget.value); 
         }
     }
 
+    const calcStringToNum = () => {
+        console.log('start STN');
+        console.log(calculation);
+        
+        let currentNum = '';
+        let newCalculation = [];
+        for (let entry of calculation) {
+            if (typeof entry === 'string') {
+                if (Number.isInteger(Number(entry))) {
+                    currentNum += entry;
+                }
+                else {
+                    if (currentNum) {
+                        newCalculation = [];
+                        newCalculation.push(Number(currentNum),entry);
+                    }
+                    else {
+                        // multiple operators in a row
+                        newCalculation[1] = entry;
+                    }
+                    currentNum = '';
+                }
+            }
+            else {
+                newCalculation.push(entry);
+            }
+        }
+        currentNum ? newCalculation.push(Number(currentNum)) : null;
+        calculation = newCalculation;
+        console.log('end STN');
+        console.log(calculation);
+    }
+
+    const equals = () => {
+        calcStringToNum();
+        calculate();
+    }
+
     const flipSign = () => {
-        if (input) {
-            input = (Number(input) * -1).toString();
-            replaceDisplay(input);
-            calculation.push('flip');
-        }
-        else {
-            result *= -1;
-            replaceDisplay(result);
-        }
+        calcStringToNum();
+        
+        
+        // if (input) {
+        //     input = (Number(input) * -1).toString();
+        //     replaceDisplay(input);
+        //     calculation.push('flip');
+        // }
+        // else {
+        //     result *= -1;
+        //     replaceDisplay(result);
+        // }
     }
 
     const pushPercent = () => {
@@ -56,69 +97,51 @@
         replaceDisplay(result);
     }
 
-    // Calculate always runs on equals, and runs on operator clicks only if numbers have been entered
-    // Calculate can accept an array of no values, just numbers, just operators, or operators and then numbers
-    // Calculate of just numbers will create a currentNum, set it to result, and display result
-    // Calculate of array starting with operators will store final operator for use on later currentNum from numbers in array
-    // When an operator appears, update and display result value then clear currentNum
-
-    const calculate = event => {
-        console.log(`start result ${result}`);
+    const calculate = () => {
+        console.log('start calc');
         console.log(calculation);
+        if (calculation.length > 0) {
+            [num1,operator,num2] = calculation;
 
-        if (calculation.length === 0) {
-            replaceDisplay(result);
-            return;
-        };
-        for (let entry of calculation) {
-            if (entry === 'flip') {
-                currentNum = (Number(currentNum) * -1).toString();
+            if (typeof operator === 'number') {
+                [operator, num2] = [num2, operator];
+                console.log(num2 + ' ' + operator);
             }
-            else if (Number.isInteger(Number(entry))) {
-                currentNum += entry;
-                console.log(`currentNum ${currentNum}`);
-            } else {
-                updateResult();
-                operator = entry;
-                console.log(`operator ${entry}`);
+
+            if (!num2) {
+                num2 = num1;
             }
-            console.log(`result ${result}`);
+
+            if (operator === '+') {
+                num1 += num2;
+            }
+            else if (operator === '-') {
+                num1 -= num2;
+            }
+            else if (operator === '*') {
+                num1 *= num2;
+            }
+            else if (operator === '/') {
+                num1 /= num2;
+            }
+            else if (!operator) {
+                num1 = num2;
+            }
         }
-        updateResult();
-        console.log(`equals ${result}`);
-
-        replaceDisplay(result);
-        calculation = [];
-        operator = '';
+        else {
+            num1 = 0;
+        }
+        
+        replaceDisplay(num1);
+        calculation = [num1];
         input = '';
-    }
-    
-    const updateResult = () => {
-        if (!currentNum) {
-            currentNum = result.toString();
-        }
-
-        if (operator === '+') {
-            result += Number(currentNum);
-        }
-        else if (operator === '-') {
-            result -= Number(currentNum);
-        }
-        else if (operator === '*') {
-            result *= Number(currentNum);
-        }
-        else if (operator === '/') {
-            result /= Number(currentNum);
-        }
-        else if (operator === '') {
-            result = Number(currentNum);
-        }
-        currentNum = '';
+        console.log('end calc');
+        console.log(calculation);
     }
 
     $numbers.forEach(button => button.addEventListener('click',pushNumber));
     $operator.forEach(button => button.addEventListener('click',pushOperator));
-    $equal.addEventListener('click',calculate);
+    $equal.addEventListener('click',equals);
     $plusMinus.addEventListener('click',flipSign);
     $percent.addEventListener('click',pushPercent);
 
