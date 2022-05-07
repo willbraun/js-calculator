@@ -5,11 +5,10 @@
     const $screen = document.querySelector('.calculator-screen');
     const $plusMinus = document.querySelector('.plus-minus');
     const $percent = document.querySelector('.percent');
+    const $decimal = document.querySelector('.decimal');
 
     let input = '';
     let calculation = [];
-    let operator = '';
-    let result = 0;
 
     const replaceDisplay = item => {
         $screen.value = parseFloat(Number(item).toPrecision(7)).toString();
@@ -43,7 +42,7 @@
         let newCalculation = [];
         for (let entry of calculation) {
             if (typeof entry === 'string') {
-                if (Number.isInteger(Number(entry))) {
+                if (Number.isInteger(Number(entry)) || entry === '.') {
                     currentNum += entry;
                 }
                 else {
@@ -68,33 +67,30 @@
         console.log(calculation);
     }
 
-    const equals = () => {
-        calcStringToNum();
-        calculate();
-    }
-
     const flipSign = () => {
         calcStringToNum();
-        
-        
-        // if (input) {
-        //     input = (Number(input) * -1).toString();
-        //     replaceDisplay(input);
-        //     calculation.push('flip');
-        // }
-        // else {
-        //     result *= -1;
-        //     replaceDisplay(result);
-        // }
+        for (let i = calculation.length - 1; i >= 0; i--) {
+            if (typeof calculation[i] === 'number') {
+                calculation[i] *= -1;
+                replaceDisplay(calculation[i]);
+                console.log('flip');
+                console.log(calculation);
+                return;
+            }
+        }
     }
 
     const pushPercent = () => {
-        // if you have an input, multiply that by 0.01
-        // push *, then push 0.01 to the calculation array
-        // if you don't have an input, multiply result by 0.01
-
-        
-        replaceDisplay(result);
+        calcStringToNum();
+        for (let i = calculation.length - 1; i >= 0; i--) {
+            if (typeof calculation[i] === 'number') {
+                calculation[i] *= 0.01;
+                replaceDisplay(calculation[i]);
+                console.log('%');
+                console.log(calculation);
+                return;
+            }
+        }
     }
 
     const calculate = () => {
@@ -139,11 +135,16 @@
         console.log(calculation);
     }
 
+    const equals = () => {
+        calcStringToNum();
+        calculate();
+    }
+
     $numbers.forEach(button => button.addEventListener('click',pushNumber));
+    $decimal.addEventListener('click',pushNumber);
     $operator.forEach(button => button.addEventListener('click',pushOperator));
     $equal.addEventListener('click',equals);
     $plusMinus.addEventListener('click',flipSign);
     $percent.addEventListener('click',pushPercent);
 
-    
 })();
