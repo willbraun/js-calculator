@@ -3,35 +3,15 @@
     const $operator = document.querySelectorAll('.operator, .clear');
     const $equal = document.querySelector('.equal-sign');
     const $screen = document.querySelector('.calculator-screen');
-    const $plusMinus = document.querySelector('.plus-minus');
-    const $percent = document.querySelector('.percent');
     const $decimal = document.querySelector('.decimal');
+    const $modifiers = document.querySelectorAll('.modifier');
+    const $constants = document.querySelectorAll('.pi, .e');
 
     let input = '';
     let calculation = [];
     
     const replaceDisplay = item => {
         $screen.value = item.toString();
-    }
-
-    const pushNumber = event => {
-        calculation.push(event.currentTarget.value);
-        input += event.currentTarget.value;
-        replaceDisplay(input);
-    }
-
-    const pushOperator = event => {
-        calcStringToNum();
-        input = '';
-        if (event.currentTarget.value === 'clear') {
-            calculation.pop();
-            replaceDisplay(0);
-            console.log('cleared');
-            console.log(calculation);
-        } else {
-            calculation.length === 3 ? calculate() : null;
-            calculation.push(event.currentTarget.value); 
-        }
     }
 
     const calcStringToNum = () => {
@@ -60,32 +40,88 @@
                 newCalculation.push(entry);
             }
         }
-        currentNum ? newCalculation.push(Number(currentNum)) : null;
-        calculation = newCalculation;
+        currentNum && newCalculation.length < 3 ? newCalculation.push(Number(currentNum)) : null;
+        newCalculation.length === 0 ? newCalculation.push(0) : null;
+        calculation = newCalculation.slice(0,3);
         console.log('end STN');
         console.log(calculation);
     }
 
-    const flipSign = () => {
+    const pushNumber = event => {
+        calculation.push(event.currentTarget.value);
+        input += event.currentTarget.value;
+        replaceDisplay(input);
+    }
+
+    const pushOperator = event => {
         calcStringToNum();
-        for (let i = calculation.length - 1; i >= 0; i--) {
-            if (typeof calculation[i] === 'number') {
-                calculation[i] *= -1;
-                replaceDisplay(calculation[i]);
-                console.log('flip');
-                console.log(calculation);
-                return;
-            }
+        input = '';
+        if (event.currentTarget.value === 'clear') {
+            calculation.pop();
+            replaceDisplay(0);
+            console.log('cleared');
+            console.log(calculation);
+        } else {
+            calculation.length === 3 ? calculate() : null;
+            calculation.push(event.currentTarget.value); 
         }
     }
 
-    const pushPercent = () => {
+    const pushConstant = event => {
+        calculation.push(Math[event.currentTarget.value]);
+        replaceDisplay(Math[event.currentTarget.value]);
+    }
+
+    const modifyInput = event => {
+        let modifier = event.currentTarget.value;
         calcStringToNum();
         for (let i = calculation.length - 1; i >= 0; i--) {
             if (typeof calculation[i] === 'number') {
-                calculation[i] *= 0.01;
+                if (modifier === 'plus-minus') {
+                    calculation[i] *= -1;
+                }
+                else if (modifier === 'percent') {
+                    calculation[i] *= 0.01;
+                }
+                else if (modifier === 'sqaure') {
+                    calculation[i] = Math.pow(calculation[i],2);
+                }
+                else if (modifier === 'cube') {
+                    calculation[i] = Math.pow(calculation[i],3);
+                }
+                else if (modifier === 'sqaure-root') {
+                    calculation[i] = Math.sqrt(calculation[i]);
+                }
+                else if (modifier === 'cube-root') {
+                    calculation[i] = Math.cbrt(calculation[i]);
+                }
+                else if (modifier === 'log') {
+                    calculation[i] = Math.log10(calculation[i]);
+                }
+                else if (modifier === 'ln') {
+                    calculation[i] = Math.log(calculation[i]);
+                }
+                else if (modifier === 'sin') {
+                    calculation[i] = Math.sin(calculation[i]);
+                }
+                else if (modifier === 'cos') {
+                    calculation[i] = Math.cos(calculation[i]);
+                }
+                else if (modifier === 'tan') {
+                    calculation[i] = Math.tan(calculation[i]);
+                }
+                else if (modifier === 'sinh') {
+                    calculation[i] = Math.sinh(calculation[i]);
+                }
+                else if (modifier === 'cosh') {
+                    calculation[i] = Math.cosh(calculation[i]);
+                }
+                else if (modifier === 'tanh') {
+                    calculation[i] = Math.tanh(calculation[i]);
+                }
+                
                 replaceDisplay(calculation[i]);
-                console.log('%');
+                console.log(modifier);
                 console.log(calculation);
                 return;
             }
@@ -143,7 +179,7 @@
     $decimal.addEventListener('click',pushNumber);
     $operator.forEach(button => button.addEventListener('click',pushOperator));
     $equal.addEventListener('click',equals);
-    $plusMinus.addEventListener('click',flipSign);
-    $percent.addEventListener('click',pushPercent);
+    $modifiers.forEach(button => button.addEventListener('click',modifyInput));
+    $constants.forEach(button => button.addEventListener('click',pushConstant));
 
 })();
