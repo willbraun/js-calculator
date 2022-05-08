@@ -9,9 +9,9 @@
 
     let input = '';
     let calculation = [];
-
+    
     const replaceDisplay = item => {
-        $screen.value = parseFloat(Number(item).toPrecision(7)).toString();
+        $screen.value = item.toString();
     }
 
     const pushNumber = event => {
@@ -51,7 +51,6 @@
                         newCalculation.push(Number(currentNum),entry);
                     }
                     else {
-                        // multiple operators in a row
                         newCalculation[1] = entry;
                     }
                     currentNum = '';
