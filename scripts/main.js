@@ -1,6 +1,6 @@
 (function(){
     const $numbers = document.querySelectorAll('.number');
-    const $operator = document.querySelectorAll('.operator, .clear');
+    const $operator = document.querySelectorAll('.operator, .sci-operator, .clear');
     const $equal = document.querySelector('.equal-sign');
     const $screen = document.querySelector('.calculator-screen');
     const $decimal = document.querySelector('.decimal');
@@ -42,6 +42,7 @@
         }
         currentNum && newCalculation.length < 3 ? newCalculation.push(Number(currentNum)) : null;
         newCalculation.length === 0 ? newCalculation.push(0) : null;
+        newCalculation.length === 2 && newCalculation.every(element => typeof element === 'number') ? newCalculation.shift() : null;
         calculation = newCalculation.slice(0,3);
         console.log('end STN');
         console.log(calculation);
@@ -119,8 +120,8 @@
                 else if (modifier === 'tanh') {
                     calculation[i] = Math.tanh(calculation[i]);
                 }
-                
                 replaceDisplay(calculation[i]);
+                input = '';
                 console.log(modifier);
                 console.log(calculation);
                 return;
@@ -154,6 +155,12 @@
             }
             else if (operator === '/') {
                 num1 /= num2;
+            }
+            else if (operator === 'exponent') {
+                num1 = Math.pow(num1,num2);
+            }
+            else if (operator === 'root') {
+                num1 = Math.pow(num1,(1/num2));
             }
             else if (!operator) {
                 num1 = num2;
