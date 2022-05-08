@@ -20,8 +20,6 @@
     }
 
     const calcStringToNum = () => {
-        console.log('start STN');
-        console.log(calculation);
         
         let currentNum = '';
         let newCalculation = [];
@@ -50,8 +48,6 @@
         newCalculation.length === 2 && newCalculation.every(element => typeof element === 'number') ? newCalculation.shift() : null;
         calculation = newCalculation.slice(0,3);
         input = '';
-        console.log('end STN');
-        console.log(calculation);
     }
 
     const pushNumber = event => {
@@ -66,8 +62,6 @@
         if (event.currentTarget.value === 'clear') {
             calculation.pop();
             replaceDisplay(0);
-            console.log('cleared');
-            console.log(calculation);
         } else {
             calculation.length === 3 ? calculate() : null;
             calculation.push(event.currentTarget.value); 
@@ -91,8 +85,6 @@
         calcStringToNum();
         const modifier = event.currentTarget.value;
         const index = findLastNumberIndex(calculation);
-        console.log(index);
-        console.log(calculation[index]);
 
         if (modifier === 'plus-minus') {
             calculation[index] *= -1;
@@ -138,20 +130,15 @@
         }
         replaceDisplay(calculation[index]);
         input = '';
-        console.log(modifier);
-        console.log(calculation);
         return;
     }
 
     const calculate = () => {
-        console.log('start calc');
-        console.log(calculation);
         if (calculation.length > 0) {
             [num1,operator,num2] = calculation;
 
             if (typeof operator === 'number') {
                 [operator, num2] = [num2, operator];
-                console.log(num2 + ' ' + operator);
             }
 
             if (!num2) {
@@ -183,11 +170,8 @@
         else {
             num1 = 0;
         }
-        
         replaceDisplay(num1);
         calculation = [num1];
-        console.log('end calc');
-        console.log(calculation);
     }
 
     const equals = () => {
