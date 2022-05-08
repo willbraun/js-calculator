@@ -106,7 +106,7 @@
         else if (modifier === 'cube') {
             calculation[index] = Math.pow(calculation[index],3);
         }
-        else if (modifier === 'sqaure-root') {
+        else if (modifier === 'square-root') {
             calculation[index] = Math.sqrt(calculation[index]);
         }
         else if (modifier === 'cube-root') {
@@ -141,58 +141,6 @@
         console.log(modifier);
         console.log(calculation);
         return;
-
-        // for (let i = calculation.length - 1; i >= 0; i--) {
-        //     if (typeof calculation[i] === 'number') {
-        //         if (modifier === 'plus-minus') {
-        //             calculation[i] *= -1;
-        //         }
-        //         else if (modifier === 'percent') {
-        //             calculation[i] *= 0.01;
-        //         }
-        //         else if (modifier === 'sqaure') {
-        //             calculation[i] = Math.pow(calculation[i],2);
-        //         }
-        //         else if (modifier === 'cube') {
-        //             calculation[i] = Math.pow(calculation[i],3);
-        //         }
-        //         else if (modifier === 'sqaure-root') {
-        //             calculation[i] = Math.sqrt(calculation[i]);
-        //         }
-        //         else if (modifier === 'cube-root') {
-        //             calculation[i] = Math.cbrt(calculation[i]);
-        //         }
-        //         else if (modifier === 'log') {
-        //             calculation[i] = Math.log10(calculation[i]);
-        //         }
-        //         else if (modifier === 'ln') {
-        //             calculation[i] = Math.log(calculation[i]);
-        //         }
-        //         else if (modifier === 'sin') {
-        //             calculation[i] = Math.sin(calculation[i]);
-        //         }
-        //         else if (modifier === 'cos') {
-        //             calculation[i] = Math.cos(calculation[i]);
-        //         }
-        //         else if (modifier === 'tan') {
-        //             calculation[i] = Math.tan(calculation[i]);
-        //         }
-        //         else if (modifier === 'sinh') {
-        //             calculation[i] = Math.sinh(calculation[i]);
-        //         }
-        //         else if (modifier === 'cosh') {
-        //             calculation[i] = Math.cosh(calculation[i]);
-        //         }
-        //         else if (modifier === 'tanh') {
-        //             calculation[i] = Math.tanh(calculation[i]);
-        //         }
-        //         replaceDisplay(calculation[i]);
-        //         input = '';
-        //         console.log(modifier);
-        //         console.log(calculation);
-        //         return;
-        //     }
-        // }
     }
 
     const calculate = () => {
@@ -256,11 +204,11 @@
 
     $memoryAdd.addEventListener('click',() => {
         calcStringToNum();
-        memory.push(calculation[0]);
+        memory.push(calculation[findLastNumberIndex(calculation)]);
     });
     $memorySubtract.addEventListener('click',() => {
         calcStringToNum();
-        memory.push(calculation[0] * -1);
+        memory.push(calculation[findLastNumberIndex(calculation)] * -1);
     });
     $memoryRecall.addEventListener('click',() => {
         const recall = memory.reduce((a,b) => a + b);
