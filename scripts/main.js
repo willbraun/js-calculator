@@ -20,7 +20,6 @@
     }
 
     const calcStringToNum = () => {
-        
         let currentNum = '';
         let newCalculation = [];
         for (let entry of calculation) {
