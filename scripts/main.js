@@ -1,6 +1,6 @@
 (function(){
     const $numbers = document.querySelectorAll('.number');
-    const $operator = document.querySelectorAll('.operator, .sci-operator, .clear');
+    const $operators = document.querySelectorAll('.operator, .sci-operator, .clear');
     const $equal = document.querySelector('.equal-sign');
     const $screen = document.querySelector('.calculator-screen');
     const $decimal = document.querySelector('.decimal');
@@ -180,7 +180,7 @@
 
     $numbers.forEach(button => button.addEventListener('click',pushNumber));
     $decimal.addEventListener('click',pushNumber);
-    $operator.forEach(button => button.addEventListener('click',pushOperator));
+    $operators.forEach(button => button.addEventListener('click',pushOperator));
     $equal.addEventListener('click',equals);
     $modifiers.forEach(button => button.addEventListener('click',modifyInput));
     $constants.forEach(button => button.addEventListener('click',pushConstant));
