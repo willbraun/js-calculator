@@ -48,7 +48,6 @@
         newCalculation.length === 0 ? newCalculation.push(0) : null;
         newCalculation.length === 2 && newCalculation.every(element => typeof element === 'number') ? newCalculation.shift() : null;
         calculation = newCalculation.slice(0,3);
-        console.log(calculation);
         input = '';
     }
 
