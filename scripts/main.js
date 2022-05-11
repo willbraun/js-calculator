@@ -19,6 +19,8 @@
         $screen.value = item.toString();
     }
 
+    const toNumberSafe = string => string === '.' ? 0 : Number(string);
+
     const calcStringToNum = () => {
         let currentNum = '';
         let newCalculation = [];
@@ -30,7 +32,7 @@
                 else {
                     if (currentNum) {
                         newCalculation = [];
-                        newCalculation.push(Number(currentNum),entry);
+                        newCalculation.push(toNumberSafe(currentNum),entry);
                     }
                     else {
                         newCalculation[1] = entry;
@@ -42,34 +44,39 @@
                 newCalculation.push(entry);
             }
         }
-        currentNum && newCalculation.length < 3 ? newCalculation.push(Number(currentNum)) : null;
+        currentNum && newCalculation.length < 3 ? newCalculation.push(toNumberSafe(currentNum)) : null;
         newCalculation.length === 0 ? newCalculation.push(0) : null;
         newCalculation.length === 2 && newCalculation.every(element => typeof element === 'number') ? newCalculation.shift() : null;
         calculation = newCalculation.slice(0,3);
+        console.log(calculation);
         input = '';
     }
 
     const pushNumber = event => {
-        calculation.push(event.currentTarget.value);
-        input += event.currentTarget.value;
+        const val = event.target.value;
+        if ($screen.value === '0' && val === '0') return;
+        if ($screen.value.includes('.') && val === '.') return;
+        calculation.push(val);
+        input += val;
+        input === '.' ? input = '0.' : null;
         replaceDisplay(input);
     }
 
     const pushOperator = event => {
         calcStringToNum();
         input = '';
-        if (event.currentTarget.value === 'clear') {
+        if (event.target.value === 'clear') {
             calculation.pop();
             replaceDisplay(0);
         } else {
             calculation.length === 3 ? calculate() : null;
-            calculation.push(event.currentTarget.value); 
+            calculation.push(event.target.value); 
         }
     }
 
     const pushConstant = event => {
-        calculation.push(Math[event.currentTarget.value]);
-        replaceDisplay(Math[event.currentTarget.value]);
+        calculation.push(Math[event.target.value]);
+        replaceDisplay(Math[event.target.value]);
     }
 
     const findLastNumberIndex = array => {
@@ -82,7 +89,7 @@
 
     const modifyInput = event => {
         calcStringToNum();
-        const modifier = event.currentTarget.value;
+        const modifier = event.target.value;
         const index = findLastNumberIndex(calculation);
 
         if (modifier === 'plus-minus') {
@@ -140,7 +147,7 @@
                 [operator, num2] = [num2, operator];
             }
 
-            if (!num2) {
+            if (!num2 && num2 !== 0) {
                 num2 = num1;
             }
 
