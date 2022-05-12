@@ -1,4 +1,7 @@
 (function(){
+
+    'use strict';
+
     const $numbers = document.querySelectorAll('.number');
     const $operators = document.querySelectorAll('.operator, .sci-operator, .clear');
     const $equal = document.querySelector('.equal-sign');
@@ -12,14 +15,26 @@
     const $memoryClear = document.querySelector('.mclear');
 
     let input = '';
-    let calculation = [];
+    let calculation = [0];
     let memory = [0];
     
     const replaceDisplay = item => {
-        $screen.value = item.toString();
+        if (!Number.isFinite(Number(item))) {
+            $screen.value = 'Not a number';
+        }
+        else {
+            $screen.value = item.toString();
+        }
     }
 
-    const toNumberSafe = string => string === '.' ? 0 : Number(string);
+    const toNumberSafe = item => {
+        if (item === '.') {
+            return 0;
+        }
+        else {
+            return Number(item);
+        }  
+    }
 
     const calcStringToNum = () => {
         let currentNum = '';
@@ -41,7 +56,7 @@
                 }
             }
             else {
-                newCalculation.push(entry);
+                newCalculation.push(toNumberSafe(entry));
             }
         }
         currentNum && newCalculation.length < 3 ? newCalculation.push(toNumberSafe(currentNum)) : null;
@@ -139,11 +154,17 @@
     }
 
     const calculate = () => {
+        let num1, operator, num2;
+
         if (calculation.length > 0) {
             [num1,operator,num2] = calculation;
 
             if (typeof operator === 'number') {
                 [operator, num2] = [num2, operator];
+            }
+
+            if (!Number.isFinite(num1) || !Number.isFinite(num2)) {
+                operator = '';
             }
 
             if (!num2 && num2 !== 0) {
