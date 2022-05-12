@@ -20,7 +20,7 @@
     
     const replaceDisplay = item => {
         if (!Number.isFinite(Number(item))) {
-            $screen.value = 'Not a number';
+            $screen.value = 'Undefined';
         }
         else {
             $screen.value = item.toString();
